@@ -4,6 +4,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import dotenv from "dotenv";
 import authRouter from "./routes/authRoutes.js";
+import itemRouter from "./routes/itemRoutes.js";
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
@@ -15,6 +16,8 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 app.use("/api/auth", authRouter);
+app.use("/api/items", itemRouter);
+
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });

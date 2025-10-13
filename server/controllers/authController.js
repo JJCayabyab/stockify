@@ -61,6 +61,7 @@ export const login = async (req, res) => {
 
     // Check if user exists
     const [user] = await sql`SELECT * FROM users WHERE email = ${email}`;
+    
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
