@@ -1,8 +1,9 @@
 import express from "express";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { sql } from "../config/db.js";
-
-const router = express.Router();
+import { register,login } from "../controllers/authController.js";
+const authRouter = express.Router();
 
 // User Registration
+authRouter.post("/register", register);
+authRouter.post("/login", login);
+
+export default authRouter;
