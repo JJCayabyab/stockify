@@ -69,7 +69,7 @@ export const login = async (req, res) => {
     // Compare password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     // Create JWT token (expires in 7 days)
