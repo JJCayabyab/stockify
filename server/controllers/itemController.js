@@ -15,7 +15,7 @@ export const createItem = async (req, res) => {
     RETURNING *;
     `;
 
-    await sql`INSERT INTO inventory_logs (item_id, user_id, change_type,item_name)
+    await sql`INSERT INTO inventory_logs (item_id, user_id, log_type,item_name)
     VALUES (${newItem[0].id},${userId},'add',${name})`;
     res.status(201).json({
       message: "Item created successfully",
@@ -68,7 +68,7 @@ export const deleteItem = async (req, res) => {
     }
 
     const log = await sql`
-      INSERT INTO inventory_logs (item_id, user_id, change_type,item_name)
+      INSERT INTO inventory_logs (item_id, user_id, log_type,item_name)
       VALUES (${itemId}, ${userId}, 'remove',${item[0].name});
     `;
 
@@ -80,5 +80,21 @@ export const deleteItem = async (req, res) => {
     res.status(200).json({ message: "Item deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const updateItem = async (req, res) => {
+  const userId = req.user.id;
+  const itemId = req.params.id;
+  const { name, category, quantity, supplier, price } = req.body;
+
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Forbidden: Admins only" });
+  }
+
+  try {
+    
+  } catch (error) {
+    
   }
 };
