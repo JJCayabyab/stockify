@@ -4,7 +4,7 @@ export const getLogs = async (req, res) => {
   const role = req.user.role;
 
   if (role !== "admin") {
-    return res.status(403).json({ message: "Forbidden: Admins only" });
+    return res.status(403).json({ message: "Unauthorized: Admin access required" });
   }
 
   try {

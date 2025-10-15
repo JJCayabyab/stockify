@@ -2,6 +2,13 @@ import { sql } from "../config/db.js";
 
 export const createItem = async (req, res) => {
   const userId = req.user.id; // data comes from authenticateToken middleware
+  const role = req.user.role;
+
+  if (role !== "admin") {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized: Admin access required" });
+  }
   try {
     const { name, category, quantity, supplier, price, created_by } = req.body;
 
@@ -15,8 +22,10 @@ export const createItem = async (req, res) => {
     RETURNING *;
     `;
 
-    await sql`INSERT INTO inventory_logs (item_id, user_id, log_type,item_name)
-    VALUES (${newItem[0].id},${userId},'add',${name})`;
+    const log =
+      await sql`INSERT INTO inventory_logs (item_id, user_id, log_type,item_name)
+        VALUES (${newItem[0].id},${userId},'add',${name})
+        RETURNING *`;
     res.status(201).json({
       message: "Item created successfully",
       item: newItem[0],
@@ -89,12 +98,46 @@ export const updateItem = async (req, res) => {
   const { name, category, quantity, supplier, price } = req.body;
 
   if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Forbidden: Admins only" });
+    return res
+      .status(403)
+      .json({ message: "Unauthorized: Admin access required" });
+  }
+
+  if (!name && !category && !quantity && !supplier && !price) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
+    const currentItem = await sql`SELECT * FROM items WHERE id=${itemId} AND deleted = FALSE`;
+
+    if (currentItem.length === 0) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    const updatedItem = {
+      name: name ? name : currentItem[0].name,
+      category: category ? category : currentItem[0].category,
+      quantity: quantity ? quantity : currentItem[0].quantity,
+      supplier: supplier ? supplier : currentItem[0].supplier,
+      price: price ? price : currentItem[0].price,
+    };
+
+    const finalUpdatedItem = await sql`
+      UPDATE items
+      SET name = ${updatedItem.name},
+          category = ${updatedItem.category},
+          quantity = ${updatedItem.quantity},
+          supplier = ${updatedItem.supplier},
+          price = ${updatedItem.price}
+      WHERE id = ${itemId} AND deleted = false
+      RETURNING *`
     
+     const log = await sql`
+      INSERT INTO inventory_logs (item_id, user_id, log_type,item_name)
+      VALUES (${itemId}, ${userId}, 'update',${updatedItem.name})
+      RETURNING *`
+     res.status(200).json({ message: "Item updated successfully",item:finalUpdatedItem[0],log:log[0] });
   } catch (error) {
-    
+    return res.status(500).json({ message: "Server error", error: error.message });
   }
 };
