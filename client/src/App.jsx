@@ -4,15 +4,12 @@ import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import { useState, useEffect } from "react";
 import { useAuthStore } from "./store/useAuthStore";
 import Inventory from "./pages/Inventory";
 function App() {
   const { token, loading } = useAuthStore();
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+
   return (
     <>
       <Routes>
@@ -23,6 +20,7 @@ function App() {
           path="/dashboard"
           element={token ? <Dashboard /> : <Navigate to="/login" />}
         />
+      
       </Routes>
     </>
   );

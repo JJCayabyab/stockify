@@ -12,10 +12,12 @@ export const useAuthStore = create((set) => ({
 
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
+  setError: (error) => set({ error }), // ← Add this
 
   login: async (email, password) => {
-    set({ loading: true });
+    set({ loading: true, error: "" });
     try {
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 second delay
       const res = await axios.post(`${url}/auth/login`, {
         email: email,
         password: password,
@@ -37,7 +39,7 @@ export const useAuthStore = create((set) => ({
       const message =
         error.response?.data?.message || "Login failed. Please try again.";
 
-      set({ error: message });
+      set({ error: message, loading: false });
       return false;
     }
   },

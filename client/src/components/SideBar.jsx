@@ -6,7 +6,7 @@ import { LogOut, LayoutDashboard, PackageOpen } from "lucide-react";
 
 const SideBar = () => {
   const { token, user, logout } = useAuthStore();
-  const role = user.role;
+  const role = user?.role;
 
   try {
     console.log(user);

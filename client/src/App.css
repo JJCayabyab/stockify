@@ -1,1 +1,6 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+body{
+    background-color: rgb(244, 244, 244);
+}
