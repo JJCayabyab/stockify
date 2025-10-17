@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export const authenticateToken = (req, res, next) => {
-  const authHeader = req.header("Authorization"); 
+  const authHeader = req.header("Authorization");
 
   //check if the token is provided
   if (!authHeader) {

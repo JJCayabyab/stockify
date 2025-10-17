@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import authRouter from "./routes/authRoutes.js";
 import itemRouter from "./routes/itemRoutes.js";
 import logRouter from "./routes/logRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
@@ -19,6 +20,7 @@ app.use(morgan("dev"));
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemRouter);
 app.use("/api/logs", logRouter);
+app.use("/api/users", userRouter);
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
