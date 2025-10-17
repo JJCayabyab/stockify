@@ -30,7 +30,7 @@ export const register = async (req, res) => {
 
     //create jwt token
     const token = jwt.sign(
-      { id: newUser[0].id, email: newUser[0].email, role: newUser[0].role },
+      { id: newUser[0].id, email: newUser[0].email, role: newUser[0].role, name: newUser[0].name },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -74,7 +74,7 @@ export const login = async (req, res) => {
 
     // Create JWT token (expires in 7 days)
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role,name: user.name },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -87,6 +87,7 @@ export const login = async (req, res) => {
         id: user.id,
         email: user.email,
         role: user.role,
+        name: user.name
       },
     });
   } catch (error) {

@@ -3,7 +3,7 @@ import { sql } from "../config/db.js";
 export const createItem = async (req, res) => {
   const userId = req.user.id; // data comes from authenticateToken middleware
   const role = req.user.role;
-
+  const performedBy = req.user.name; // name of the one who created the item
   if (role !== "admin") {
     return res
       .status(403)
@@ -23,8 +23,8 @@ export const createItem = async (req, res) => {
     `;
 
     const log =
-      await sql`INSERT INTO inventory_logs (item_id, user_id, log_type,item_name)
-        VALUES (${newItem[0].id},${userId},'add',${name})
+      await sql`INSERT INTO inventory_logs (item_id, user_id, log_type,item_name,performed_by)
+        VALUES (${newItem[0].id},${userId},'add',${name},${performedBy})
         RETURNING *`;
     res.status(201).json({
       message: "Item created successfully",
@@ -63,6 +63,7 @@ export const deleteItem = async (req, res) => {
   const userId = req.user.id;
   const itemId = req.params.id;
   const role = req.user.role;
+  const performedBy = req.user.name; 
 
   if (role !== "admin") {
     return res.status(403).json({ message: "Forbidden: Admins only" });
@@ -77,8 +78,8 @@ export const deleteItem = async (req, res) => {
     }
 
     const log = await sql`
-      INSERT INTO inventory_logs (item_id, user_id, log_type,item_name)
-      VALUES (${itemId}, ${userId}, 'remove',${item[0].name});
+      INSERT INTO inventory_logs (item_id, user_id, log_type,item_name,performed_by)
+      VALUES (${itemId}, ${userId}, 'remove',${item[0].name},${performedBy});
     `;
 
     await sql`UPDATE items 
@@ -95,6 +96,7 @@ export const deleteItem = async (req, res) => {
 export const updateItem = async (req, res) => {
   const userId = req.user.id;
   const itemId = req.params.id;
+  const performedBy = req.user.name; 
   const { name, category, quantity, supplier, price } = req.body;
 
   if (req.user.role !== "admin") {
@@ -108,7 +110,8 @@ export const updateItem = async (req, res) => {
   }
 
   try {
-    const currentItem = await sql`SELECT * FROM items WHERE id=${itemId} AND deleted = FALSE`;
+    const currentItem =
+      await sql`SELECT * FROM items WHERE id=${itemId} AND deleted = FALSE`;
 
     if (currentItem.length === 0) {
       return res.status(404).json({ message: "Item not found" });
@@ -130,14 +133,20 @@ export const updateItem = async (req, res) => {
           supplier = ${updatedItem.supplier},
           price = ${updatedItem.price}
       WHERE id = ${itemId} AND deleted = false
-      RETURNING *`
-    
-     const log = await sql`
-      INSERT INTO inventory_logs (item_id, user_id, log_type,item_name)
-      VALUES (${itemId}, ${userId}, 'update',${updatedItem.name})
-      RETURNING *`
-     res.status(200).json({ message: "Item updated successfully",item:finalUpdatedItem[0],log:log[0] });
+      RETURNING *`;
+
+    const log = await sql`
+      INSERT INTO inventory_logs (item_id, user_id, log_type,item_name.performed_by)
+      VALUES (${itemId}, ${userId}, 'update',${updatedItem.name},${performedBy})
+      RETURNING *`;
+    res.status(200).json({
+      message: "Item updated successfully",
+      item: finalUpdatedItem[0],
+      log: log[0],
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
