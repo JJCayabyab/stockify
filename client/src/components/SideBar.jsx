@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../../public/stockify-logo.svg";
+import logo from "../assets/stockify-logo.svg";
 import { LogOut, LayoutDashboard, PackageOpen, Menu, X } from "lucide-react";
 
 const SideBar = () => {
@@ -54,7 +54,11 @@ const SideBar = () => {
         {/* Top Section */}
         <div>
           <div className="flex items-center mb-8">
-            <img src={logo} alt="stockify-logo" className="size-12 md:size-18" />
+            <img
+              src={logo}
+              alt="stockify-logo"
+              className="size-12 md:size-18"
+            />
             <h1 className="text-xl md:text-2xl font-bold ml-2">Stockify</h1>
           </div>
 
@@ -92,12 +96,9 @@ const SideBar = () => {
               <h4>Logs</h4>
             </div>
           )}
-        </div>
-
-        {/* Bottom Section (Logout) */}
-        <div>
+          <hr className="text-gray-400  border-t-2 font-semibold"/>
           <Link
-            className="flex gap-2 text-md items-center m-3 p-2 rounded-md font-semibold hover:bg-gray-700"
+            className="flex   gap-2 text-md items-center m-3 p-2 rounded-md font-semibold hover:bg-gray-700"
             to="/login"
             onClick={() => {
               logout();
@@ -108,6 +109,8 @@ const SideBar = () => {
             <h4>Logout</h4>
           </Link>
         </div>
+
+       
       </div>
     </>
   );

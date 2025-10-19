@@ -7,17 +7,17 @@ export const useAuthStore = create((set) => ({
   token: localStorage.getItem("token") || null,
   email: "",
   password: "",
-  loading: false,
-  error: "",
+  authLoading: false,
+  authError: "",
 
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
-  setError: (error) => set({ error }), // ← Add this
+  setAuthError: (authError) => set({ authError }),
 
   login: async (email, password) => {
-    set({ loading: true, error: "" });
+    set({ authLoading: true, authError: "" });
     try {
-      await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 second delay
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       const res = await axios.post(`${url}/auth/login`, {
         email: email,
         password: password,
@@ -29,8 +29,8 @@ export const useAuthStore = create((set) => ({
       set({
         user: res.data.user,
         token: res.data.token,
-        loading: false,
-        error: "",
+        authLoading: false,
+        authError: "",
       });
 
       console.log(res.data);
@@ -39,7 +39,7 @@ export const useAuthStore = create((set) => ({
       const message =
         error.response?.data?.message || "Login failed. Please try again.";
 
-      set({ error: message, loading: false });
+      set({ authError: message, authLoading: false });
       return false;
     }
   },
