@@ -9,7 +9,7 @@ export const useLogsStore = create((set) => ({
   logs: [],
   logsCount: 0,
   getLogsCount: async () => {
-    set({ logsLoading: true });
+    set({ logsLoading: true, logsError: "" });
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(`${url}/logs/count`, {

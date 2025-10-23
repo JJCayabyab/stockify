@@ -5,7 +5,7 @@ const url = import.meta.env.VITE_API_URL;
 
 export const useUsersStore = create((set) => ({
   usersLoading: false,
-  error: "",
+  usersError: "",
   userStats: {
     totalUsers: 0,
     totalAdmins: 0,
@@ -14,7 +14,7 @@ export const useUsersStore = create((set) => ({
 
 
   getUsersCount: async () => {
-    set({ usersLoading: true, error: "" });
+    set({ usersLoading: true, usersError: "" });
 
     try {
       const token = localStorage.getItem("token");
@@ -35,7 +35,7 @@ export const useUsersStore = create((set) => ({
     } catch (error) {
       const message =
         error.response?.data?.message || "Failed fetching user count.";
-      set({ error: message, usersLoading: false });
+      set({ usersError: message, usersLoading: false });
       return false;
     }
   },

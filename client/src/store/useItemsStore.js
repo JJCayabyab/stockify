@@ -12,10 +12,10 @@ export const useItemStore = create((set) => ({
     lowStockItems: 0,
     itemsCountByCategory: [],
   },
-
+  
  
   getItems: async () => {
-    set({ itemsLoading: true });
+    set({ itemsLoading: true, itemsError: "" });
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(`${url}/items`, {
