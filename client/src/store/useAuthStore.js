@@ -9,10 +9,7 @@ export const useAuthStore = create((set) => ({
   password: "",
   authLoading: false,
   authError: "",
-
-  setEmail: (email) => set({ email }),
-  setPassword: (password) => set({ password }),
-  setAuthError: (authError) => set({ authError }),
+  
 
   login: async (email, password) => {
     set({ authLoading: true, authError: "" });

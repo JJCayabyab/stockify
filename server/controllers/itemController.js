@@ -36,6 +36,78 @@ export const createItem = async (req, res) => {
   }
 };
 
+//add multiple items for testing purposes
+export const createItems = async (req, res) => {
+  const userId = req.user.id;
+  const role = req.user.role;
+  const performedBy = req.user.name;
+
+  if (role !== "admin") {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized: Admin access required" });
+  }
+
+  let items = req.body.items;
+
+  if (!Array.isArray(items)) {
+    items = [items];
+  }
+
+  // Validate fields
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    if (
+      !item.name ||
+      !item.category ||
+      item.quantity == null ||
+      !item.supplier ||
+      item.price == null
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: `Item at index ${i} is missing required field`,
+      });
+    }
+  }
+
+  try {
+    const results = [];
+
+    for (const item of items) {
+      const inserted = await sql`
+        INSERT INTO items (name, category, quantity, supplier, price, created_by)
+        VALUES (${item.name}, ${item.category}, ${item.quantity}, ${item.supplier}, ${item.price}, ${userId})
+        RETURNING *
+      `;
+
+      const newItem = inserted[0];
+      results.push(newItem);
+
+      // Log the addition
+      await sql`
+        INSERT INTO inventory_logs (item_id, user_id, log_type, item_name, performed_by)
+        VALUES (${newItem.id}, ${userId}, 'add', ${newItem.name}, ${performedBy})
+      `;
+    }
+
+    return res.status(201).json({
+      success: true,
+      message: `Successfully created ${results.length} item(s)`,
+      data: results,
+    });
+  } catch (error) {
+    console.error("Error inserting items:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create items",
+      error: error.message,
+    });
+  }
+};
+
+
+
 export const getItems = async (req, res) => {
   try {
     const items = await sql`
@@ -63,7 +135,7 @@ export const deleteItem = async (req, res) => {
   const userId = req.user.id;
   const itemId = req.params.id;
   const role = req.user.role;
-  const performedBy = req.user.name; 
+  const performedBy = req.user.name;
 
   if (role !== "admin") {
     return res.status(403).json({ message: "Forbidden: Admins only" });
@@ -96,7 +168,7 @@ export const deleteItem = async (req, res) => {
 export const updateItem = async (req, res) => {
   const userId = req.user.id;
   const itemId = req.params.id;
-  const performedBy = req.user.name; 
+  const performedBy = req.user.name;
   const { name, category, quantity, supplier, price } = req.body;
 
   if (req.user.role !== "admin") {
@@ -148,5 +220,36 @@ export const updateItem = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Server error", error: error.message });
+  }
+};
+
+export const itemCount = async (req, res) => {
+  try {
+    const itemCount = await sql`
+      SELECT COUNT(*)::int as item_count FROM items
+      WHERE deleted = false`;
+
+    const itemsByCategory = await sql`
+      SELECT category,
+      COUNT(*)::int as count
+      FROM items
+      WHERE deleted = false
+      GROUP BY category
+      ORDER BY count DESC`;
+
+    const lowStock = await sql `
+      SELECT COUNT(*)::int AS low_stock_items
+      FROM items
+      WHERE quantity < 15 AND deleted=false` 
+
+    res.status(200).json({
+      totalCount: itemCount[0].item_count, 
+      byCategory: itemsByCategory,
+      lowStockItems:lowStock[0].low_stock_items
+    });
+    
+  } catch (error) {
+    console.error("Error fetching itemCount:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

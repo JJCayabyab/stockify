@@ -45,11 +45,11 @@ const SideBar = () => {
         />
       )}
 
-      {/* Sidebar */}
+     
       <div
-        className={`fixed md:static h-screen bg-gray-900 text-white p-3 transition-all duration-300 z-40 ${
-          isOpen ? "w-56 left-0" : "-left-56 w-56"
-        } md:w-56 md:translate-x-0 flex flex-col justify-between`}
+        className={`fixed top-0 h-screen bg-gray-900 text-white p-3 transition-all duration-300 z-40 overflow-y-auto ${
+          isOpen ? "left-0" : "-left-56"
+        } md:left-0 w-56 flex flex-col justify-between`}
       >
         {/* Top Section */}
         <div>
@@ -96,9 +96,11 @@ const SideBar = () => {
               <h4>Logs</h4>
             </div>
           )}
-          <hr className="text-gray-400  border-t-2 font-semibold"/>
+          
+          <hr className="text-gray-400 border-t-2 font-semibold"/>
+          
           <Link
-            className="flex   gap-2 text-md items-center m-3 p-2 rounded-md font-semibold hover:bg-gray-700"
+            className="flex gap-2 text-md items-center m-3 p-2 rounded-md font-semibold hover:bg-gray-700"
             to="/login"
             onClick={() => {
               logout();
@@ -109,8 +111,6 @@ const SideBar = () => {
             <h4>Logout</h4>
           </Link>
         </div>
-
-       
       </div>
     </>
   );

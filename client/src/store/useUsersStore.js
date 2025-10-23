@@ -12,8 +12,6 @@ export const useUsersStore = create((set) => ({
     totalStaff: 0,
   },
 
-  setUsersLoading: (usersLoading) => set({ usersLoading }),
-  setError: (error) => set({ error }),
 
   getUsersCount: async () => {
     set({ usersLoading: true, error: "" });

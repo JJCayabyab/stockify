@@ -3,11 +3,11 @@ import { sql } from "../config/db.js";
 export const userCount = async (req, res) => {
   try {
     const result = await sql`
-     SELECT 
-      COUNT(*) AS total_users,
-      COUNT(*) FILTER (WHERE role = 'admin') AS total_admins,
-      COUNT(*) FILTER (WHERE role = 'staff') AS total_staff
-    FROM users;
+      SELECT 
+      COUNT(*)::int AS total_users,
+      COUNT(*) FILTER (WHERE role = 'admin')::int AS total_admins,
+      COUNT(*) FILTER (WHERE role = 'staff')::int AS total_staff
+      FROM users;
     `;
 
     const { total_users, total_admins, total_staff } = result[0];
