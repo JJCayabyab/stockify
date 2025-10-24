@@ -112,7 +112,7 @@ export const getItems = async (req, res) => {
   try {
     const items = await sql`
     SELECT 
-      items.id AS item_id,
+      items.id AS id,
       items.name,
       items.category,
       items.quantity,
@@ -208,7 +208,7 @@ export const updateItem = async (req, res) => {
       RETURNING *`;
 
     const log = await sql`
-      INSERT INTO inventory_logs (item_id, user_id, log_type,item_name.performed_by)
+      INSERT INTO inventory_logs (item_id, user_id, log_type, item_name, performed_by)
       VALUES (${itemId}, ${userId}, 'update',${updatedItem.name},${performedBy})
       RETURNING *`;
     res.status(200).json({

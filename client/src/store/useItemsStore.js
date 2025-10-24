@@ -3,7 +3,7 @@ import axios from "axios";
 
 const url = import.meta.env.VITE_API_URL;
 
-export const useItemStore = create((set) => ({
+export const useItemStore = create((set, get) => ({
   itemsLoading: false,
   itemsError: "",
   items: [],
@@ -12,8 +12,7 @@ export const useItemStore = create((set) => ({
     lowStockItems: 0,
     itemsCountByCategory: [],
   },
-  
- 
+
   getItems: async () => {
     set({ itemsLoading: true, itemsError: "" });
     try {
@@ -57,6 +56,55 @@ export const useItemStore = create((set) => ({
 
       set({ itemsError: message, itemsLoading: false });
       return false;
+    }
+  },
+  updateItem: async (id, updatedData) => {
+    set({ itemsLoading: true });
+    try {
+      const token = localStorage.getItem("token");
+      const res = localStorage.getItem("token");
+
+      const response = await axios.patch(`${url}/items/${id}`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const updatedItem = response.data.item;
+      const currentItems = get().items;
+
+      const newItems = currentItems.map((item) =>
+        item.id === id ? updatedItem : item
+      );
+
+      set({ items: newItems, itemsLoading: false });
+      return updatedItem;
+    } catch (error) {
+      const message = error.response?.data?.message || "Failed updating the item";
+
+      set({ itemsError: message, itemsLoading: false });
+      throw error;
+    }
+  },
+
+  deleteItem: async (id) => {
+    set({ itemsLoading: true });
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.delete(`${url}/items/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const currentItems = get().items;
+      const newItems = currentItems.filter((item) => item.id !== id);
+      set({ items: newItems, itemsLoading: false });
+      return true;
+    } catch (error) {
+      const message = error.response?.data?.message || "Failed deleting the item";
+      set({ itemsError: message, itemsLoading: false });
+      throw error;
     }
   },
 }));

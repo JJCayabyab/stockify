@@ -22,7 +22,8 @@ const Login = () => {
       setAuthError("All fields are required");
       return;
     }
-
+    
+    // this returns boolean
     const success = await login(email, password);
 
     if (success) {
@@ -31,7 +32,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100"> 
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="lg:w-6/12  bg-white   shadow-md flex   smgap-8 flex-col md:flex-row">
         {/* Left Side - Form */}
         <div className=" bg-gray-800 p-5 lg:w-1/2 flex flex-col items-center justify-center">
@@ -44,7 +45,7 @@ const Login = () => {
             Manage your inventory efficiently
           </p>
         </div>
-        
+
         {/* Right Side - Welcome Message */}
         <div className="lg:w-1/2 py-10 lg:py-16 px-12">
           <h1 className="font-bold text-3xl mb-6 text-black">Sign in</h1>

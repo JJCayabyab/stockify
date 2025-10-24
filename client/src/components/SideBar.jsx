@@ -10,7 +10,7 @@ const SideBar = () => {
   const role = user?.role;
 
   try {
-    console.log(user);
+  
   } catch (error) {
     if (!token) {
       return <div>Unauthorized Access</div>;

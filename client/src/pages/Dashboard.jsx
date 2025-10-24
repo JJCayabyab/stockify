@@ -105,6 +105,7 @@ const Dashboard = () => {
           </div>
         </div>
 
+         {/* Bar Chart */}     
         <div className="w-full mt-10 bg-white rounded-lg shadow-md p-4 sm:p-6">
           <BarChart />
         </div>
