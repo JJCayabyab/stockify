@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/stockify-logo.svg";
-import { LogOut, LayoutDashboard, PackageOpen, Menu, X } from "lucide-react";
+import {
+  LogOut,
+  LayoutDashboard,
+  PackageOpen,
+  Menu,
+  X,
+  ScrollText,
+  UserPlus,
+} from "lucide-react";
 
 const SideBar = () => {
   const { token, user, logout } = useAuthStore();
@@ -10,7 +18,6 @@ const SideBar = () => {
   const role = user?.role;
 
   try {
-  
   } catch (error) {
     if (!token) {
       return <div>Unauthorized Access</div>;
@@ -45,7 +52,6 @@ const SideBar = () => {
         />
       )}
 
-     
       <div
         className={`fixed top-0 h-screen bg-gray-900 text-white p-3 transition-all duration-300 z-40 overflow-y-auto ${
           isOpen ? "left-0" : "-left-56"
@@ -88,22 +94,46 @@ const SideBar = () => {
             <h4>Inventory</h4>
           </NavLink>
 
-          {role === "admin" && (
-            <div
+          {role === "admin" ? (
+            <NavLink
+              to="/logs"
               onClick={closeMenu}
-              className="flex gap-2 text-md items-center m-3 p-2 rounded-md font-semibold hover:bg-gray-700 cursor-pointer"
+              className={({ isActive }) =>
+                `flex gap-2 text-md items-center m-3 p-2 rounded-md font-semibold cursor-pointer transition ${
+                  isActive ? "bg-blue-600" : "hover:bg-gray-700"
+                }`
+              }
             >
+              <ScrollText />
               <h4>Logs</h4>
-            </div>
+            </NavLink>
+          ) : (
+            <></>
           )}
-          
-          <hr className="text-gray-400 border-t-2 font-semibold"/>
-          
+
+          {role === "admin" ? (
+            <NavLink
+              to="/adduser"
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `flex gap-2 text-md items-center m-3 p-2 rounded-md font-semibold cursor-pointer transition ${
+                  isActive ? "bg-blue-600" : "hover:bg-gray-700"
+                }`
+              }
+            >
+              <UserPlus />
+              <h4>Add User</h4>
+            </NavLink>
+          ) : (
+            <></>
+          )}
+          <hr className="text-gray-400 border-t-2 font-semibold" />
+
           <Link
             className="flex gap-2 text-md items-center m-3 p-2 rounded-md font-semibold hover:bg-gray-700"
             to="/login"
-            onClick={() => {
-              logout();
+            onClick={async () => {
+              await logout();
               closeMenu();
             }}
           >

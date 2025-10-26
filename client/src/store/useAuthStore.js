@@ -12,6 +12,19 @@ export const useAuthStore = create((set) => ({
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
 
+  addUser: async (userData) => {
+    set({ authLoading: true, authError: "" });
+    try {
+      const res = await axios.post(`${url}/auth/register`, userData);
+      set({ authLoading: false, authError: "" });
+      return true;
+    } catch (error) {
+      const message = error.response?.data?.message || "Error adding user";
+      console.log(error);
+      set({ authError: message, authLoading: false });
+      return false;
+    }
+  },
   login: async (email, password) => {
     set({ authLoading: true, authError: "" });
     try {
@@ -38,6 +51,7 @@ export const useAuthStore = create((set) => ({
         error.response?.data?.message || "Login failed. Please try again.";
 
       set({ authError: message, authLoading: false });
+
       return false;
     }
   },

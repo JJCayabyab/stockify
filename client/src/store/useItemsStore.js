@@ -58,6 +58,25 @@ export const useItemStore = create((set, get) => ({
       return false;
     }
   },
+  addItem: async (itemData) => {
+    set({ itemsLoading: true });
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(`${url}/items`, itemData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      set({ itemData: [...get().items, res.data.item] });
+      set({ itemsLoading: false });
+    } catch (error) {
+      const message = error.response?.data?.message || "Failed adding item";
+
+      set({ itemsError: message, itemsLoading: false });
+      return false;
+    }
+  },
   updateItem: async (id, updatedData) => {
     set({ itemsLoading: true });
     try {
@@ -80,7 +99,8 @@ export const useItemStore = create((set, get) => ({
       set({ items: newItems, itemsLoading: false });
       return updatedItem;
     } catch (error) {
-      const message = error.response?.data?.message || "Failed updating the item";
+      const message =
+        error.response?.data?.message || "Failed updating the item";
 
       set({ itemsError: message, itemsLoading: false });
       throw error;
@@ -102,7 +122,8 @@ export const useItemStore = create((set, get) => ({
       set({ items: newItems, itemsLoading: false });
       return true;
     } catch (error) {
-      const message = error.response?.data?.message || "Failed deleting the item";
+      const message =
+        error.response?.data?.message || "Failed deleting the item";
       set({ itemsError: message, itemsLoading: false });
       throw error;
     }

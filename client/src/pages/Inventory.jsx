@@ -6,11 +6,28 @@ import { SquarePen, Trash2 } from "lucide-react";
 const Inventory = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [toast, setToast] = useState(null); // "added" | "updated" | "deleted" | "error" | null
-  const { itemsLoading, itemsError, items, getItems, updateItem, deleteItem } =
-    useItemStore();
+  const {
+    itemsLoading,
+    itemsError,
+    items,
+    getItems,
+    updateItem,
+    deleteItem,
+    addItem,
+  } = useItemStore();
 
+  //for updating an item
   const [updatedItem, setUpdatedItem] = useState({
     id: null,
+    name: "",
+    category: "",
+    quantity: null,
+    supplier: "",
+    price: null,
+  });
+
+  //for adding new item
+  const [newItem, setNewItem] = useState({
     name: "",
     category: "",
     quantity: null,
@@ -35,6 +52,14 @@ const Inventory = () => {
       await updateItem(updatedItem.id, updatedItem);
       document.getElementById("my_modal_2").close();
       showToast("updated");
+      setNewItem({
+        name: "",
+        category: "",
+        quantity: null,
+        supplier: "",
+        price: null,
+      });
+      await getItems();
     } catch (error) {
       showToast("error");
     }
@@ -48,13 +73,7 @@ const Inventory = () => {
     setSelectedItemId(id);
     document.getElementById("my_modal_1").showModal();
   };
-  /*************  ✨ Windsurf Command ⭐  *************/
-  /**
-   * Handles the deletion of an item.
-   * Closes the delete modal and shows a toast with the result of the deletion.
-   * If an error occurs, shows a toast with the error message.
-   */
-  /*******  74f05d16-2161-415c-9d69-1380efb9ad0c  *******/
+
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
@@ -66,6 +85,18 @@ const Inventory = () => {
     }
   };
 
+  //handle add item
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    try {
+      await addItem(newItem);
+      document.getElementById("my_modal_3").close();
+      showToast("added");
+      await getItems();
+    } catch (error) {
+      showToast("error");
+    }
+  };
   //filter items to display on table for search query
   const filteredItems = items.filter((item) =>
     searchQuery === ""
@@ -78,7 +109,7 @@ const Inventory = () => {
       <SideBar />
 
       <main className="flex-1 flex flex-col md:ml-56 p-5 sm:p-10 mt-15 md:mt-5">
-        {/* ✅ Toast */}
+        {/* Toast */}
         {toast && (
           <div className="toast toast-center toast-top z-50">
             {toast === "updated" && (
@@ -138,6 +169,149 @@ const Inventory = () => {
           </div>
         </dialog>
 
+        {/*  Add Item Modal */}
+        <dialog id="my_modal_3" className="modal modal-bottom sm:modal-middle">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Edit Item</h3>
+            <form
+              className="w-full max-w-md p-4 space-y-6"
+              onSubmit={handleAdd}
+            >
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Name
+                </label>
+                <input
+                  required
+                  value={newItem.name}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, name: e.target.value })
+                  }
+                  id="name"
+                  type="text"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  placeholder="Edit item name"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Category
+                </label>
+                <select
+                  required
+                  id="category"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
+                  value={newItem.category}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, category: e.target.value })
+                  }
+                >
+                  <option value=""></option>
+                  <option value="Office Supplies">Office Supplies</option>
+                  <option value="Accessories">Accessories</option>
+                  <option value="Groceries">Groceries</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Health & Beauty">Health & Beauty</option>
+                  <option value="Pet Supplies">Pet Supplies</option>
+                  <option value="Hardware">Hardware</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Home & Kitchen">Home & Kitchen</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="supplier"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Supplier
+                </label>
+                <input
+                  required
+                  id="supplier"
+                  type="text"
+                  value={newItem.supplier}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, supplier: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  placeholder="Edit supplier name"
+                />
+              </div>
+       
+              <div>
+                <label
+                  htmlFor="quantity"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Quantity
+                </label>
+                <input
+                  required
+                  id="quantity"
+                  type="number"
+                  step="any"
+                  value={newItem.quantity ?? ""}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, quantity: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  placeholder="Edit quantity"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Price
+                </label>
+                <input
+                  required
+                  id="price"
+                  type="number"
+                  value={newItem.price ?? ""}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, price: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  placeholder="Edit price"
+                />
+              </div>
+              <div className="flex justify-end space-x-4 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNewItem({
+                      name: "",
+                      category: "",
+                      quantity: null,
+                      supplier: "",
+                      price: null,
+                    });
+                    document.getElementById("my_modal_3").close();
+                  }}
+                  className="btn bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
+                >
+                  Close
+                </button>
+
+                <button
+                  type="submit"
+                  className="btn bg-indigo-600 text-white hover:bg-indigo-700"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </dialog>
         {/*  Edit Modal */}
         <dialog id="my_modal_2" className="modal modal-bottom sm:modal-middle">
           <div className="modal-box">
@@ -160,7 +334,7 @@ const Inventory = () => {
                   }
                   id="name"
                   type="text"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                   placeholder="Edit item name"
                 />
               </div>
@@ -208,7 +382,7 @@ const Inventory = () => {
                   onChange={(e) =>
                     setUpdatedItem({ ...updatedItem, supplier: e.target.value })
                   }
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                   placeholder="Edit supplier name"
                 />
               </div>
@@ -223,11 +397,12 @@ const Inventory = () => {
                 <input
                   id="quantity"
                   type="number"
+                  step="any"
                   value={updatedItem.quantity ?? ""}
                   onChange={(e) =>
                     setUpdatedItem({ ...updatedItem, quantity: e.target.value })
                   }
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                   placeholder="Edit quantity"
                 />
               </div>
@@ -246,7 +421,7 @@ const Inventory = () => {
                   onChange={(e) =>
                     setUpdatedItem({ ...updatedItem, price: e.target.value })
                   }
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                   placeholder="Edit price"
                 />
               </div>
@@ -291,12 +466,13 @@ const Inventory = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 shadow-sm"
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:outline-none  focus:ring-blue-500 shadow-sm"
             placeholder="Search an item..."
           />
+
           <button
             className="font-semibold bg-blue-700 rounded-sm text-white w-30 text-center hover:bg-blue-400"
-            onClick={() => showToast("added")} // 🔹 temporary test for add
+            onClick={() => document.getElementById("my_modal_3").showModal()}
           >
             Add Item
           </button>

@@ -24,13 +24,6 @@ const Dashboard = () => {
           getItemsCount(),
           getLogsCount(),
         ]);
-
-        // Check which ones failed
-        results.forEach((result, index) => {
-          if (result.status === "rejected") {
-            console.error(`Request ${index} failed:`, result.reason);
-          }
-        });
       } catch (error) {
         console.error("Unexpected error:", error);
       }
@@ -105,7 +98,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-         {/* Bar Chart */}     
+        {/* Bar Chart */}
         <div className="w-full mt-10 bg-white rounded-lg shadow-md p-4 sm:p-6">
           <BarChart />
         </div>

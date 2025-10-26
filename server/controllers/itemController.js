@@ -122,7 +122,8 @@ export const getItems = async (req, res) => {
       users.name AS created_by_name
     FROM items
     JOIN users ON items.created_by = users.id
-    WHERE items.deleted = false;
+    WHERE items.deleted = false
+    ORDER BY items.updated_at DESC;
 `;
     res.status(200).json({ items });
   } catch (error) {
@@ -203,7 +204,8 @@ export const updateItem = async (req, res) => {
           category = ${updatedItem.category},
           quantity = ${updatedItem.quantity},
           supplier = ${updatedItem.supplier},
-          price = ${updatedItem.price}
+          price = ${updatedItem.price},
+          updated_at = NOW()
       WHERE id = ${itemId} AND deleted = false
       RETURNING *`;
 
