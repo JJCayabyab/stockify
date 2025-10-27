@@ -15,7 +15,7 @@ A full-stack **Inventory Mangement System** built with:
 - Secure JWT-based login system
 
 ## 🌐 Live Demo
-[Visit the app here](https://stockify-app.netlify.app/login)
+[Visit the app here](https://stockify-app.netlify.app)
 
 ## 🎥 Video Demo
 [Watch the demo here](https://www.youtube.com/watch?v=8q6f_Ls8esw)
