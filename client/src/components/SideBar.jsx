@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../../public/stockify-logo.svg";
+
 import {
   LogOut,
   LayoutDashboard,
@@ -61,7 +61,7 @@ const SideBar = () => {
         <div>
           <div className="flex items-center mb-8">
             <img
-              src={logo}
+              src="/stockify-logo.svg"
               alt="stockify-logo"
               className="size-12 md:size-18"
             />

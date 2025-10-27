@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import logo from "../../public/stockify-logo.svg";
 const Login = () => {
   const {
     email,
@@ -36,7 +35,7 @@ const Login = () => {
       <div className="lg:w-6/12  bg-white   shadow-md flex   smgap-8 flex-col md:flex-row">
         {/* Left Side - Form */}
         <div className=" bg-gray-800 p-5 lg:w-1/2 flex flex-col items-center justify-center">
-          <img src={logo} alt="stockify-logo" className="size-18" />
+          <img src="/stockify-logo.svg" alt="stockify-logo" className="size-18" />
           <h2 className="text-4xl font-medium text-center text-white">
             Welcome to <br />{" "}
             <span className="text-blue-600 font-bold">Stockify</span>
