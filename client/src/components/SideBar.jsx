@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../assets/stockify-logo.svg";
+import logo from "../../public/stockify-logo.svg";
 import {
   LogOut,
   LayoutDashboard,

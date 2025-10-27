@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/stockify-logo.svg";
+import logo from "../../public/stockify-logo.svg";
 const Login = () => {
   const {
     email,
