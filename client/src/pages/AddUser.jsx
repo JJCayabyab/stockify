@@ -51,6 +51,7 @@ const AddUser = () => {
         {authError && (
           <div className="text-center text-red-500 mt-4">{authError}</div>
         )}
+        
         {authLoading && (
           <div className="mt-2 flex  justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700"></div>

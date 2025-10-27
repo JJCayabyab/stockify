@@ -34,67 +34,73 @@ const Logs = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 shadow-sm"
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:outline-none focus:ring-blue-500 shadow-sm"
             placeholder="Search a log based on item name..."
           />
         </div>
+
+        {/*Show error message that came from useLogsStore */}
+        {logsError && (
+          <div className="text-center text-red-500 mt-4">{logsError}</div>
+        )}
         {/*  Table Section */}
         <div className="overflow-x-auto">
-          {logsLoading && (
-            <div className="mt-2 flex  justify-center">
+          {logsLoading ? (
+            <div className="mt-10 flex  justify-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700"></div>
             </div>
-          )}
-          <table className="w-full mt-8 border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
-            <thead>
-              <tr className="bg-gray-100 border-b border-gray-200">
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Item Name
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Action
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Performed By
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredLogs.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="px-6 py-8 text-center text-gray-500"
-                  >
-                    No logs found matching "{searchQuery}"
-                  </td>
+          ) : (
+            <table className="w-full mt-8 border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-gray-100 border-b border-gray-200">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    Item Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    Action
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    Performed By
+                  </th>
                 </tr>
-              ) : (
-                filteredLogs.map((log) => (
-                  <tr
-                    key={log.id}
-                    className="border-b border-gray-200 hover:bg-gray-100"
-                  >
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {log.created_at}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {log.item_name}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900 ">
-                      {log.log_type}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {log.performed_by}
+              </thead>
+              <tbody>
+                {filteredLogs.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
+                      No logs found matching "{searchQuery}"
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredLogs.map((log) => (
+                    <tr
+                      key={log.id}
+                      className="border-b border-gray-200 hover:bg-gray-100"
+                    >
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        {log.created_at}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        {log.item_name}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900 ">
+                        {log.log_type}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        {log.performed_by}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </main>
     </div>
