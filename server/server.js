@@ -13,7 +13,14 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://stockify-app.netlify.app"], 
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use(helmet());
 app.use(morgan("dev"));
 
