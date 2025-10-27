@@ -20,7 +20,7 @@ export const useAuthStore = create((set) => ({
       return true;
     } catch (error) {
       const message = error.response?.data?.message || "Error adding user";
-      console.log(error);
+    
       set({ authError: message, authLoading: false });
       return false;
     }
@@ -44,7 +44,6 @@ export const useAuthStore = create((set) => ({
         authError: "",
       });
 
-      console.log(res.data);
       return true;
     } catch (error) {
       const message =

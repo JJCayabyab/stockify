@@ -22,7 +22,6 @@ export const useItemStore = create((set, get) => ({
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(res.data.items);
       set({ items: res.data.items, itemsLoading: false, itemsError: "" });
       return true;
     } catch (error) {
@@ -50,7 +49,7 @@ export const useItemStore = create((set, get) => ({
         },
         itemsLoading: false,
       });
-      console.log(res.data.byCategory);
+
     } catch (error) {
       const message = error.response?.data?.message || "Failed items count";
 
