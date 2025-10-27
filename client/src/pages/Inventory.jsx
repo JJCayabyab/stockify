@@ -199,7 +199,7 @@ const Inventory = () => {
                   id="name"
                   type="text"
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
-                  placeholder="Edit item name"
+                  placeholder="Add item name"
                 />
               </div>
               <div>
@@ -247,7 +247,7 @@ const Inventory = () => {
                     setNewItem({ ...newItem, supplier: e.target.value })
                   }
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
-                  placeholder="Edit supplier name"
+                  placeholder="Add supplier name"
                 />
               </div>
 
@@ -268,7 +268,7 @@ const Inventory = () => {
                     setNewItem({ ...newItem, quantity: e.target.value })
                   }
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
-                  placeholder="Edit quantity"
+                  placeholder="Add quantity"
                 />
               </div>
               <div>
@@ -287,7 +287,7 @@ const Inventory = () => {
                     setNewItem({ ...newItem, price: e.target.value })
                   }
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
-                  placeholder="Edit price"
+                  placeholder="Add price"
                 />
               </div>
               <div className="flex justify-end space-x-4 pt-2">
