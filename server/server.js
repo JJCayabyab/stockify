@@ -19,7 +19,7 @@ const allowedOrigins = [
   "http://localhost:5173",
 ];
 
-// ✅ Handle CORS manually (works on Express 5)
+//  Handle CORS manually 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {

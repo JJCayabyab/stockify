@@ -2,10 +2,12 @@ import SideBar from "../components/SideBar";
 import { useEffect, useState } from "react";
 import { useItemStore } from "../store/useItemsStore";
 import { SquarePen, Trash2 } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const Inventory = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [toast, setToast] = useState(null); // "added" | "updated" | "deleted" | "error" | null
+  const [toast, setToast] = useState(null);
+  const { user } = useAuthStore();
   const {
     itemsLoading,
     itemsError,
@@ -123,13 +125,17 @@ const Inventory = () => {
               </div>
             )}
             {toast === "deleted" && (
-              <div className="alert alert-error">
+              <div className="alert alert-success">
                 <span>Item deleted successfully!</span>
               </div>
             )}
             {toast === "error" && (
               <div className="alert alert-error">
-                <span>Something went wrong. Try again.</span>
+                {user.role !== "admin" ? (
+                  <span>Only admins can do this action.</span>
+                ) : (
+                  <span>Something went wrong. Try again.</span>
+                )}
               </div>
             )}
           </div>
@@ -172,7 +178,7 @@ const Inventory = () => {
         {/*  Add Item Modal */}
         <dialog id="my_modal_3" className="modal modal-bottom sm:modal-middle">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">Edit Item</h3>
+            <h3 className="font-bold text-lg">Add Item</h3>
             <form
               className="w-full max-w-md p-4 space-y-6"
               onSubmit={handleAdd}
@@ -244,7 +250,7 @@ const Inventory = () => {
                   placeholder="Edit supplier name"
                 />
               </div>
-       
+
               <div>
                 <label
                   htmlFor="quantity"
@@ -472,7 +478,13 @@ const Inventory = () => {
 
           <button
             className="font-semibold bg-blue-700 rounded-sm text-white w-30 text-center hover:bg-blue-400"
-            onClick={() => document.getElementById("my_modal_3").showModal()}
+            onClick={() => {
+              if (user.role !== "admin") {
+                showToast("error");
+                return;
+              }
+              document.getElementById("my_modal_3").showModal();
+            }}
           >
             Add Item
           </button>
@@ -554,6 +566,10 @@ const Inventory = () => {
                           title="Edit item"
                           className="text-blue-600 cursor-pointer"
                           onClick={() => {
+                            if (user.role !== "admin") {
+                              showToast("error");
+                              return;
+                            }
                             setUpdatedItem({
                               id: item.id,
                               name: item.name,
@@ -568,7 +584,13 @@ const Inventory = () => {
                         <Trash2
                           title="Delete item"
                           className="text-red-600 cursor-pointer"
-                          onClick={() => showDeleteModal(item.id)}
+                          onClick={() => {
+                            if (user.role !== "admin") {
+                              showToast("error");
+                              return;
+                            }
+                            showDeleteModal(item.id);
+                          }}
                         />
                       </td>
                     </tr>
