@@ -17,6 +17,8 @@ const app = express();
 const allowedOrigins = [
   "https://stockify-app.netlify.app",
   "http://localhost:5173",
+  "https://stockify-theta-two.vercel.app",
+
 ];
 
 //  Handle CORS manually 
